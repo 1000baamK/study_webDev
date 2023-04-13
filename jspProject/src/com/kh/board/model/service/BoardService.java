@@ -182,5 +182,74 @@ public class BoardService {
 		
 		return result;
 	}
+	
+	//사진 게시판 게시글 작성 메소드
+	public int insertPhotoBoard(Board b, ArrayList<Attachment> list) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		int result = new BoardDao().insertPhotoBoard(conn, b);
+		
+		int result2 = new BoardDao().insertAttachmentList(conn, list);
+		
+		if(result>0 && result2>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);			
+		}
+		
+		//둘중 하나라도 0이라면 0돌려주기
+		return result*result2;
+	}
+
+	//나
+//	//사진 게시판 조회
+//	public ArrayList<Board> selectPhotoBoard() {
+//		
+//		Connection conn = JDBCTemplate.getConnection();
+//		
+//		ArrayList<Board> list = new BoardDao().selectPhotoBoard(conn);
+//		
+//		JDBCTemplate.close(conn);
+//		
+//		return list;
+//	}
+//	
+//	//첨부파일리스트 조회
+//	public ArrayList<Attachment> selectAtList() {
+//		
+//		Connection conn = JDBCTemplate.getConnection();
+//		
+//		ArrayList<Attachment> atList = new BoardDao().selectAtList(conn);
+//		
+//		JDBCTemplate.close(conn);
+//		
+//		return atList;
+//	}
+
+	public ArrayList<Board> selectAttachmentList() {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		ArrayList<Board> list = new BoardDao().selectAttachmentList(conn);
+		
+		JDBCTemplate.close(conn);
+		
+		return list;
+	}
+
+	//사진게시글 상세조회 첨부파일 메소드
+	public ArrayList<Attachment> selectAttachmentList(int boardNo) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		ArrayList<Attachment> list = new BoardDao().selectAttachmentList(conn, boardNo);
+		
+		JDBCTemplate.close(conn);
+		
+		return list;
+	}
+
+	
 
 }

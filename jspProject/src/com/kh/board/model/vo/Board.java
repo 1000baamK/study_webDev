@@ -24,10 +24,23 @@ STATUS	VARCHAR2(1 BYTE)
 	private Date createDate;
 	private String status;
 	
+	//대표이미지 경로+파일명(변경된) 담을 필드 하나 생성하기
+	private String titleImg;
+	
 	
 	public Board() {
 		super();
 	}
+	
+	//사진게시판 게시글 목록 조회해올 생성자
+	public Board(int boardNo, String boardTitle, int count, String titleImg) {
+		super();
+		this.boardNo = boardNo;
+		this.boardTitle = boardTitle;
+		this.count = count;
+		this.titleImg = titleImg;
+	}
+	
 	
 	public Board(int boardNo, int boardType, String category, String boardTitle, String boardContent,
 			String boardWriter, int count, Date createDate, String status) {
@@ -45,6 +58,7 @@ STATUS	VARCHAR2(1 BYTE)
 	
 	
 	
+
 
 	public Board(int boardNo, String category, String boardTitle, String boardWriter, int count, Date createDate) {
 		super();
@@ -68,6 +82,14 @@ STATUS	VARCHAR2(1 BYTE)
 		this.boardWriter = boardWriter;
 		this.createDate = createDate;
 	}
+
+	public Board(int boardNo, String boardTitle, int count) {
+		super();
+		this.boardNo = boardNo;
+		this.boardTitle = boardTitle;
+		this.count = count;
+	}
+	
 
 	public int getBoardNo() {
 		return boardNo;
@@ -123,8 +145,13 @@ STATUS	VARCHAR2(1 BYTE)
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	
+	public String getTitleImg() {
+		return titleImg;
+	}
+	public void setTitleImg(String titleImg) {
+		this.titleImg = titleImg;
+	}
+
 	@Override
 	public String toString() {
 		return "Board [boardNo=" + boardNo + ", boardType=" + boardType + ", category=" + category + ", boardTitle="
