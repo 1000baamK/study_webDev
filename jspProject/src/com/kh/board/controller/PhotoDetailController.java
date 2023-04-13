@@ -14,16 +14,16 @@ import com.kh.board.model.vo.Attachment;
 import com.kh.board.model.vo.Board;
 
 /**
- * Servlet implementation class PhotoListController
+ * Servlet implementation class PhotoDetailController
  */
-@WebServlet("/list.ph")
-public class PhotoListController extends HttpServlet {
+@WebServlet("/detail.ph")
+public class PhotoDetailController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public PhotoListController() {
+    public PhotoDetailController() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -32,19 +32,31 @@ public class PhotoListController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//selectAttachmentList 게시글 번호, 제목, 조회수, 파일경로 + 변경이름 조회해와서 사용자에게 보여주기
-		//목록화면엔 대표이미지가 보여지게 작성할것.
 		
-		/* 나
-		ArrayList<Board> list = new BoardService().selectPhotoBoard();
+		int boardNo = Integer.parseInt(request.getParameter("bno"));
 		
-		ArrayList<Attachment> atList = new BoardService().selectAtList();
-		*/
-		ArrayList<Board> list = new BoardService().selectAttachmentList();
+//		System.out.println(boardNo);
 		
-		request.setAttribute("atList", list);
+		//조회수 증가메소든 일반 게시판에서 작성했음 사용가능
+		int result = new BoardService().increaseCount(boardNo);
 		
-		request.getRequestDispatcher("views/board/photoListView.jsp").forward(request, response);
+		if(result>0) { //조회수 증가 성공시 조회해오기
+			//게시글 정보, 첨부파일 정보 상세조회 - 기존에 있었던 게시글 조회 쿼리문을 left조인을 이용해 조회해오기
+			Board b = new BoardService().selectBoard(boardNo);
+			
+			ArrayList<Attachment> list = new BoardService().selectAttachmentList(boardNo);
+			
+			request.setAttribute("board", b);
+			request.setAttribute("atList", list);
+			
+//			System.out.println(b);
+//			System.out.println(at);
+			request.getRequestDispatcher("views/board/photoDetailView.jsp").forward(request, response);
+		}else {
+			request.setAttribute("errorMsg", "게시글 열람 실패");
+			request.getRequestDispatcher("views/common/errorPage.jsp").forward(request, response);
+		}
+		
 		
 	}
 

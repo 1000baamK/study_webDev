@@ -36,7 +36,7 @@
 				
 				<tr>
 					<th>내용</th>
-					<td colspan="3"><textarea rows="10" cols="30" required style="resize:none"></textarea>
+					<td colspan="3"><textarea rows="10" cols="30" name="content" required style="resize:none"></textarea>
 				</tr>
 				
 				<tr>
@@ -58,14 +58,14 @@
 			<!-- 파일 첨부 영역 -->
 			<div id="file-area" align="center">
 				<input type="file" id="file1" name="file1" onchange="loadImg(this,1)" required> <!-- 대표이미지라서 필수 입력사항 -->
-				<input type="file" id="file2" name="file2" onchange="loadImg(this,2)" required>
-				<input type="file" id="file3" name="file3" onchange="loadImg(this,3)" required>
-				<input type="file" id="file4" name="file4" onchange="loadImg(this,4)" required>
+				<input type="file" id="file2" name="file2" onchange="loadImg(this,2)" >
+				<input type="file" id="file3" name="file3" onchange="loadImg(this,3)" >
+				<input type="file" id="file4" name="file4" onchange="loadImg(this,4)" >
 			</div>
 			<br><br>
 			
 			<div align="center">
-				<button type="submit">작성하기</button>
+				<button type="submit" class="btn btn-info">작성하기</button>
 				<br><br>
 			</div>
 		</form>

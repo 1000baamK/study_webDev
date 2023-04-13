@@ -383,5 +383,183 @@ public class BoardDao {
 		return result;
 	}
 	
+	//사진 게시판 게시글내용 입력 메소드
+	public int insertPhotoBoard(Connection conn, Board b) {
+		
+		int result = 0;
+		PreparedStatement pstmt = null;
+		
+		String sql = prop.getProperty("insertPhotoBoard");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, b.getBoardTitle());
+			pstmt.setString(2, b.getBoardContent());
+			pstmt.setInt(3, Integer.parseInt(b.getBoardWriter()));
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return result;
+	}
+
+	//사진게시판 첨부파일 입력 메소드
+	public int insertAttachmentList(Connection conn, ArrayList<Attachment> list) {
+		
+		int result = 1;
+		PreparedStatement pstmt = null;
+		
+		String sql = prop.getProperty("insertAttachmentList");
+		
+		try {
+			for(Attachment at : list) {
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, at.getOriginName());
+				pstmt.setString(2, at.getChangeName());
+				pstmt.setString(3, at.getFilePath());
+				pstmt.setInt(4,  at.getFileLevel());
+				
+				result *= pstmt.executeUpdate();
+			}
+		} catch (SQLException e) {
+			//처음부터 예외발생하여 result가 1인채로 넘어가는 것을 방지하기
+			result=0;
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return result;
+	}
+
+	//사진게시판 게시글 조회
+//	public ArrayList<Board> selectPhotoBoard(Connection conn) {
+//		
+//		ArrayList<Board> list = new ArrayList<>();
+//		ResultSet rset = null;
+//		Statement stmt = null;
+//		
+//		String sql = prop.getProperty("selectPhotoBoard");
+//		
+//		try {
+//			stmt = conn.createStatement();
+//			
+//			rset = stmt.executeQuery(sql);
+//			
+//			while(rset.next()) {
+//				list.add(new Board(rset.getInt("BOARD_NO"),
+//								   rset.getString("BOARD_TITLE"),
+//								   rset.getInt("COUNT")));
+//			}
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}finally {
+//			JDBCTemplate.close(rset);
+//			JDBCTemplate.close(stmt);
+//		}
+//		return list;
+//	}
+	
+	//나
+//	//첨부파일 리스트 조회
+//	public ArrayList<Attachment> selectAtList(Connection conn) {
+//		
+//		ArrayList<Attachment> atList = new ArrayList<>();
+//		ResultSet rset = null;
+//		Statement stmt = null;
+//		
+//		String sql = prop.getProperty("selectAtList");
+//		
+//		try {
+//			stmt = conn.createStatement();
+//			
+//			rset = stmt.executeQuery(sql);
+//			
+//			while(rset.next()) {
+//				atList.add(new Attachment(rset.getInt("FILE_NO"),
+//								
+//			}
+//			
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}finally {
+//			JDBCTemplate.close(rset);
+//			JDBCTemplate.close(stmt);
+//		}
+//		return list;
+//	}
+	
+	
+	//사진게시판 목록 조회메소드
+	public ArrayList<Board> selectAttachmentList(Connection conn) {
+
+		ArrayList<Board> list = new ArrayList<>();
+		
+		ResultSet rset = null;
+		Statement stmt = null;
+		
+		String sql = prop.getProperty("selectAttachmentList");
+		
+		try {
+			stmt = conn.createStatement();
+			
+			rset = stmt.executeQuery(sql);
+			
+			while(rset.next()) {
+				list.add(new Board(rset.getInt("BOARD_NO"),
+								   rset.getString("BOARD_TITLE"),
+								   rset.getInt("COUNT"),
+								   rset.getString("TITLE_IMG")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(stmt);
+		}
+		
+		
+		return list;
+	}
+	
+	//사진게시글 상세조회 첨부파일 메소드
+	public ArrayList<Attachment> selectAttachmentList(Connection conn, int boardNo) {
+		
+		ArrayList<Attachment> list = new ArrayList<>();
+		
+		ResultSet rset = null;
+		PreparedStatement pstmt = null;
+		
+		String sql = prop.getProperty("selectAt");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1,  boardNo);
+			
+			rset = pstmt.executeQuery();
+			
+			while(rset.next()) {
+				list.add(new Attachment(rset.getInt("FILE_NO"),
+										rset.getString("ORIGIN_NAME"),
+										rset.getString("CHANGE_NAME"),
+										rset.getString("FILE_PATH")));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		
+		
+		return list;
+	}
+	
 	
 }
