@@ -64,4 +64,13 @@
 		WHERE USER_ID = ?
 		 -->
 	</entry>
+	
+	<!-- 아이디 중복체크 -->
+	<entry key="idCheck">
+		SELECT *
+		FROM MEMBER
+		WHERE USER_ID = ?
+		
+		
+	</entry>
 </properties>

@@ -106,6 +106,7 @@
 					location.href = "<%=contextPath%>/detail.bo?bno="+bno;
 				});				
 			});
+			
 		</script>
 		
 		<br><br>

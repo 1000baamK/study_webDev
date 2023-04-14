@@ -18,7 +18,7 @@
 <body>
 	<%@include file="../common/menubar.jsp" %>
 	
-	<div class="outer">
+	<div class="outer" style="height:600px">
 		<br>
 		<h2 align="center">일반게시판 상세조회</h2>
 		
@@ -60,6 +60,107 @@
 				<button onclick="location.href='<%=contextPath%>/delete.bo?bno=<%=b.getBoardNo()%>'" class="btn btn-danger">삭제하기</button>
 			</div>
 		<%} %>
+		
+		<br>
+		<div id="reply-area">
+			<%if(loginUser != null){ %>
+				<input type="hidden" name="userId" value="<%=loginUser.getUserNo()%>">
+			<%} %>
+			<table border="1" align="center">
+				<thead>
+				<%if(loginUser != null){ %>
+					<tr>
+						<th>댓글작성</th>
+						<td><textarea rows="3" cols="50" style="resize:none;"></textarea></td>
+						<td><button onclick="insertReply()">댓글등록</button></td>
+					</tr>
+				<%}else{ %>
+					<tr>
+						<th>댓글작성</th>
+						<td><textarea rows="3" cols="50" style="resize:none;" readonly>로그인 후 이용이 가능합니다.</textarea></td>
+						<td><button type="button">댓글등록</button></td>						
+					</tr>
+				<%} %>
+				</thead>
+				<tbody>
+					<!--
+					<tr>
+						<td>작성자</td>
+						<td>댓글 내용</td>
+						<td>댓글 작성일 2023/04/13</td>
+					</tr>
+					  -->
+				</tbody>
+			</table>
+			<br><br>
+			
+			<script>
+				$(function(){
+					selectReplyList();
+				});
+				
+				function insertReply(){
+					//댓글 삽입
+					//게시글 번호
+					//성공시에는 댓글 리스트 조회함수 실행 후 textarea 비워주기
+					//console.log(<%=b.getBoardNo()%>);
+					//console.log($("#reply-area textarea").val());
+					//console.log($("#reply-area input[type=hidden]").val());
+					
+					$.ajax({
+						url:"insertRp.bo",
+						data:{
+							bno:<%=b.getBoardNo()%>,
+							content:$("#reply-area textarea").val(),
+							//userNo:$("#reply-area input[type=hidden]").val() jsp에서 담아서 넘기기
+						},
+						success:function(result){
+							if(result>0){
+								alert("댓글 등록 성공");
+								$("#reply-area textarea").val("");
+								
+								//댓글리스트 갱신
+								selectReplyList();
+							}else{
+								alert("댓글 등록 실패");
+							}
+						},
+						error:function(){
+							console.log("통신 실패");
+						}
+					});
+					
+				}
+				
+				function selectReplyList(){
+					//댓글 목록 조회
+					//조회해온 데이터를 tbody에 tr로 출력해주기
+					$.ajax({
+						url:"selectRp.bo",
+						data:{
+							bno:<%=b.getBoardNo()%>
+						},
+						success:function(list){
+							var result = "";
+							
+							for(var i in list){
+								result += "<tr>"
+											+"<td>"+list[i].replyWriter+"</td>"
+											+"<td>"+list[i].replyContent+"</td>"
+											+"<td>"+list[i].createDate+"</td>"
+											+"</tr>";
+							}
+							
+							$("#reply-area tbody").html(result);
+						},
+						error:function(){
+							console.log("통신 실패");	
+						}
+					});
+				}
+			</script>
+		
+		</div>
 	</div>
 </body>
 </html>

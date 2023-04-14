@@ -221,4 +221,34 @@ public class MemberDao {
 		return result;
 	}
 
+	//아이디 중복확인 메소드
+	public int idCheck(Connection conn, String chkId) {
+		
+		int result = 0;
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		
+		String sql = prop.getProperty("idCheck");
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, chkId);
+			
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				result += 1;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			JDBCTemplate.close(rset);
+			JDBCTemplate.close(pstmt);
+		}
+		
+		return result;
+	}
+
 }

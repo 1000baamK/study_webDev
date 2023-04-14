@@ -7,6 +7,7 @@ import com.kh.board.model.dao.BoardDao;
 import com.kh.board.model.vo.Attachment;
 import com.kh.board.model.vo.Board;
 import com.kh.board.model.vo.Category;
+import com.kh.board.model.vo.Reply;
 import com.kh.common.JDBCTemplate;
 import com.kh.common.model.vo.PageInfo;
 
@@ -247,6 +248,36 @@ public class BoardService {
 		
 		JDBCTemplate.close(conn);
 		
+		return list;
+	}
+	
+	//댓글 삽입
+	public int insertReply(Reply rp) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		int result = new BoardDao().insertReply(conn, rp);
+		
+		if(result>0) {
+			JDBCTemplate.commit(conn);
+		}else {
+			JDBCTemplate.rollback(conn);			
+		}
+		
+		JDBCTemplate.close(conn);
+		
+		return result;
+	}
+
+	//댓글 리스트 조회
+	public ArrayList<Reply> selectReply(int boardNo) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		ArrayList<Reply> list = new BoardDao().selectReply(conn, boardNo);
+		
+		JDBCTemplate.close(conn);
+				
 		return list;
 	}
 
