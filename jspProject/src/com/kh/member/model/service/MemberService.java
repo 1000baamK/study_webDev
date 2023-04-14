@@ -1,7 +1,9 @@
 package com.kh.member.model.service;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
+import com.kh.board.model.vo.Reply;
 import com.kh.common.JDBCTemplate;
 import com.kh.member.model.dao.MemberDao;
 import com.kh.member.model.vo.Member;
@@ -94,5 +96,19 @@ public class MemberService {
 		
 		return result;
 	}
+
+	//아이디 중복확인 메소드
+	public int idCheck(String chkId) {
+		
+		Connection conn = JDBCTemplate.getConnection();
+		
+		int result = new MemberDao().idCheck(conn,chkId);
+		
+		
+		JDBCTemplate.close(conn);
+		
+		return result;
+	}
+
 	
 }

@@ -131,4 +131,19 @@
 		ORDER BY CREATE_DATE DESC
 	 </entry>
 	 
+	 <!-- 댓글 삽입 -->
+	 <entry key="insertReply">
+	 	INSERT INTO REPLY(REPLY_NO, REPLY_CONTENT, REF_BNO, REPLY_WRITER)
+		VALUES(SEQ_RNO.NEXTVAL, ?, ?, ?)
+	 </entry>
+	 
+	 <!-- 댓글리스트 조회 -->
+	 <entry key="selectReply">
+	 	SELECT REPLY_NO, REPLY_CONTENT, REF_BNO, USER_ID, TO_CHAR(CREATE_DATE,'YY/MM/DD HH:MI:SS') "CREATE_DATE"
+	 	FROM REPLY R
+	 	JOIN MEMBER M ON (REPLY_WRITER = USER_NO)
+	 	WHERE R.STATUS = 'Y'
+	 	AND REF_BNO = ?
+	 	ORDER BY CREATE_DATE DESC
+	 </entry>
 </properties>

@@ -27,7 +27,7 @@
 
     <%@ include file="../common/menubar.jsp" %>
 
-    <div class="outer">
+    <div class="outer" style="height: 600px;">
 
         <br>
         <h2 align="center">회원 가입</h2>
@@ -40,7 +40,7 @@
                 <tr>
                     <td>* 아이디</td>
                     <td><input type="text" name="userId" maxlength="12" required></td>
-                    <td><button>중복확인</button></td>
+                    <td><button type="button" onclick="idCheck()">중복확인</button></td>
                 </tr>
                 <tr>
                     <td>* 비밀번호</td>
@@ -96,12 +96,41 @@
             <br><br>
 
             <div align="center">
-                <button type="submit">회원가입</button>
+                <button type="submit" disabled>회원가입</button>
                 <button type="reset">초기화</button>
             </div>
 
         </form>
-
+	
+		<script>
+			function idCheck(){
+				//아이디에 입력한 값을 데이터베이스에 저장된 아이디와 비교하여 중복인지 판별하기
+				var checkId = $("#enroll-form input[name=userId]").val();
+				
+				//응답데이터를 NNNNN : 사용할수 없음 / NNNNY : 사용가능
+				//사용가능할떄 회원가입버튼 활성화 시켜주기
+				$.ajax({
+					url:"chkId.me",
+					data:{
+						chkId:checkId
+					},
+					type:"get",
+					success:function(result){
+						if(result>0){
+							alert("현재 입력하신 아이디는 사용중입니다.");
+							$("#enroll-form button[type=submit]").attr("disabled",true);
+						}else{
+							alert("사용 가능한 아이디입니다.")
+							$("#enroll-form button[type=submit]").attr("disabled",false);
+							$("#enroll-form input[name=userId]").attr("readonly",true);
+						}
+					},
+					error:function(){
+						console.log("통신 실패");
+					}
+				});
+			}
+		</script>
 
 
         <br><br><br><br>
